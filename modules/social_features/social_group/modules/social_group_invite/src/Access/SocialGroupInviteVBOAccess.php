@@ -3,7 +3,9 @@
 namespace Drupal\social_group_invite\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\views\Views;
@@ -17,22 +19,11 @@ class SocialGroupInviteVBOAccess extends ViewsBulkOperationsAccess {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account, RouteMatch $routeMatch) {
+  public function access(AccountInterface $account, RouteMatch $routeMatch): AccessResultInterface {
     $parameters = [
       'view_id' => 'social_group_invitations',
       'display_id' => 'page_1',
     ];
-
-    $group = $routeMatch->getParameter('group');
-
-    if ($group instanceof GroupInterface) {
-      if ($view = Views::getView($parameters['view_id'])) {
-        $view->group = $group;
-        if ($view->access($parameters['display_id'], $account)) {
-          return AccessResult::allowed();
-        }
-      }
-    }
 
     $route = $routeMatch->getRouteObject();
 
