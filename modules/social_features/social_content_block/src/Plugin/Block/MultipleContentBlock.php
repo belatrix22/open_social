@@ -252,8 +252,12 @@ class MultipleContentBlock extends BlockBase implements ContainerFactoryPluginIn
     }
 
     // Select all entities from multiple content types.
+    /**
+     * @var string $type
+     * @var string[]|null $bundles
+     */
     foreach ($types as $type => $bundles) {
-      $entities_data = array_merge($entities_data, $this->getEntitiesByDefinitions((string) $type, $bundles));
+      $entities_data = array_merge($entities_data, $this->getEntitiesByDefinitions($type, $bundles));
       $storages[$type] = $this->entityTypeManager->getStorage($type);
     }
 
@@ -266,6 +270,8 @@ class MultipleContentBlock extends BlockBase implements ContainerFactoryPluginIn
         break;
       }
       $keys = explode('__', $key);
+
+      /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $storages[$keys[0]]->load($keys[1]);
 
       // Skip if user cannot view provided entity.
